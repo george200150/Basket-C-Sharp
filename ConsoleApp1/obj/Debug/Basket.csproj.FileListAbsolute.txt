@@ -1,0 +1,6 @@
+C:\Users\George\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe.config
+C:\Users\George\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.exe
+C:\Users\George\source\repos\ConsoleApp1\ConsoleApp1\bin\Debug\ConsoleApp1.pdb
+C:\Users\George\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\Basket.csproj.CoreCompileInputs.cache
+C:\Users\George\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.exe
+C:\Users\George\source\repos\ConsoleApp1\ConsoleApp1\obj\Debug\ConsoleApp1.pdb
