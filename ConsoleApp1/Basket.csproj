@@ -94,6 +94,7 @@
     <Compile Include="repositories\EchipaDataBaseRepository.cs" />
     <Compile Include="repositories\ICrudRepository.cs" />
     <Compile Include="repositories\MeciDataBaseRepository.cs" />
+    <Compile Include="repositories\RepositoryException.cs" />
     <Compile Include="validators\AbstractValidator.cs" />
     <Compile Include="validators\BiletValidator.cs" />
     <Compile Include="validators\ClientValidator.cs" />

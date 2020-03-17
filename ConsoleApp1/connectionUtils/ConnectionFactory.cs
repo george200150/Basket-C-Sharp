@@ -16,7 +16,7 @@ namespace Basket.connectionUtils
 
         private static ConnectionFactory instance;
 
-        public static ConnectionFactory getInstance()
+        public static ConnectionFactory GetInstance()
         {
             if (instance == null)
             {
@@ -32,6 +32,6 @@ namespace Basket.connectionUtils
             return instance;
         }
 
-        public abstract IDbConnection createConnection();
+        public abstract IDbConnection CreateConnection();
     }
 }

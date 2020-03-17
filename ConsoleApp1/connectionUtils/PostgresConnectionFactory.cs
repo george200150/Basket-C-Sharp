@@ -10,16 +10,12 @@ namespace Basket.connectionUtils
 {
     public class PostgresConnectionFactory : ConnectionFactory
     {
-        public override IDbConnection createConnection()
+        public override IDbConnection CreateConnection()
         {
-            //MySql Connection
-            String connectionString = "Database=mpp;" +
-                                        "Data Source=localhost;" +
-                                        "User id=test;" +
-                                        "Password=passtest;";
-            return new NpgsqlConnection(connectionString);
-
-
+            string connectionStr = "Server=127.0.0.1;Port=5432;Database=MPP;User Id=postgres;Password=admin";
+            
+            return new NpgsqlConnection(connectionStr);
+            
         }
     }
 }
