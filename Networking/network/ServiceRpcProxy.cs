@@ -135,8 +135,7 @@ namespace Networking.network
         {
             MeciDTO meciDTO = DTOUtils.getDTO(meci);
             UserDTO userDTO = DTOUtils.getDTO(loggedInClient);
-            Object[]
-            sendData = new Object[2];
+            Object[] sendData = new Object[2];
             sendData[0] = meciDTO;
             sendData[1] = userDTO;
             Request req = new Request.Builder().Type(RequestType.TICKETS_SOLD).Data(sendData).Build();

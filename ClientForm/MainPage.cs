@@ -79,7 +79,7 @@ namespace ClientForm
                     var lvi = new ListViewItem(row);
                     listaMeciuri.Items.Add(lvi);
                     lvi.Tag = s;
-                    
+
                 }
                 else
                 {

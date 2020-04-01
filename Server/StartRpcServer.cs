@@ -22,7 +22,7 @@ namespace Server
             MeciDataBaseRepository meciRepo = new MeciDataBaseRepository(MeciValidator.GetInstance());
             BiletDataBaseRepository biletRepo = new BiletDataBaseRepository(BiletValidator.GetInstance());
             IServices serviceImpl = new ServicesImpl(userRepo, meciRepo, biletRepo);
-            
+
 
             Console.WriteLine("Starting server on port: " + defaultPort);
             AbstractServer server = new ChatRpcConcurrentServer("127.0.0.1", defaultPort, serviceImpl);

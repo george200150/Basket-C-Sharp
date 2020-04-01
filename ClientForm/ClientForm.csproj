@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ChatUserArgs.cs" />
+    <Compile Include="UserArgs.cs" />
     <Compile Include="ClientCtrl.cs" />
     <Compile Include="LoginWindow.cs">
       <SubType>Form</SubType>

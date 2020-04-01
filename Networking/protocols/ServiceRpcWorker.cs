@@ -58,7 +58,8 @@ namespace Networking.protocols
                         logger.Debug("PROXY SERVER: run SENT RESPONSE @" + DateTime.Now);
                     }
                 }
-                catch (IOException e) {
+                catch (IOException e)
+                {
                     Console.WriteLine(e.StackTrace);
                 }
                 try
@@ -85,7 +86,8 @@ namespace Networking.protocols
         }
 
 
-        public void notifyTicketsSold(Meci meci) {
+        public void notifyTicketsSold(Meci meci)
+        {
             MeciDTO mecidto = DTOUtils.getDTO(meci);
             Response resp = new Response.Builder().Type(ResponseType.UPDATE_TICKETS_IN_CLIENT_MATCH).Data(mecidto).Build();
             logger.Debug("PROXY SERVER: ticketsSold BUILT RESPONSE @" + DateTime.Now);

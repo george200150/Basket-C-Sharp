@@ -194,7 +194,7 @@ namespace Persistence.repos
 
                 using (var comm = con.CreateCommand())
                 {
-                    comm.CommandText = "UPDATE \"Bilete\" SET \"numeClient\"=@numeClient, pret=@pret, \"idMeci\"=@idMeci WHERE id=@id";
+                    comm.CommandText = "UPDATE \"Bilete\" SET \"numeClient\"=@numeClient, \"idClient\"=@idClient, pret=@pret, \"idMeci\"=@idMeci WHERE id=@id";
                     var paramId = comm.CreateParameter();
                     paramId.ParameterName = "@id";
                     paramId.Value = entity.id;
@@ -204,6 +204,11 @@ namespace Persistence.repos
                     paramNumeClient.ParameterName = "@numeClient";
                     paramNumeClient.Value = entity.numeClient;
                     comm.Parameters.Add(paramNumeClient);
+
+                    var paramIdClient = comm.CreateParameter();
+                    paramIdClient.ParameterName = "@idClient";
+                    paramIdClient.Value = entity.idClient;
+                    comm.Parameters.Add(paramIdClient);
 
                     var paramPret = comm.CreateParameter();
                     paramPret.ParameterName = "@pret";

@@ -1,10 +1,8 @@
 ﻿using Services;
 using System;
 using Networking.network;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+
 
 namespace ClientForm
 {
