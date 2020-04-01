@@ -1,0 +1,6 @@
+C:\Users\George\source\repos\BasketCS\Model\bin\Debug\Model.dll
+C:\Users\George\source\repos\BasketCS\Model\bin\Debug\Model.pdb
+C:\Users\George\source\repos\BasketCS\Model\obj\Debug\Model.csprojAssemblyReference.cache
+C:\Users\George\source\repos\BasketCS\Model\obj\Debug\Model.csproj.CoreCompileInputs.cache
+C:\Users\George\source\repos\BasketCS\Model\obj\Debug\Model.dll
+C:\Users\George\source\repos\BasketCS\Model\obj\Debug\Model.pdb
