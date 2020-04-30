@@ -1,59 +1,137 @@
 ﻿using Model.domain;
-using Services;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
+using Thrift.Protocol;
+using Thrift.Transport;
 
 namespace ClientForm
 {
     partial class MainPage : Form
     {
+        public static Boolean needsUpdate { get; set; }
+        private List<Meci> meciuriData;
+        private int portForClientsServer;
+        private Client myClient;
 
-        private readonly ClientCtrl ctrl;
-        private readonly IList<Meci> meciuriData; // removed readonly to be able to remove and add an element each update
-        private Client currentUser { get; set; }
-        LoginWindow loginWindow;
 
-        public event EventHandler<UserEventArgs> updateEvent; //ctrl calls it when it has received an update
-
-        public MainPage(Client client, ClientCtrl ctrl, LoginWindow loginPage)
+        public MainPage(int portForClientsServer, Client myClient)
         {
-            this.ctrl = ctrl;
-            meciuriData = ctrl.getAllMeciuri().ToList();
+            this.myClient = myClient;
             InitializeComponent();
-            this.currentUser = client;
-            this.loginWindow = loginPage;
+            this.portForClientsServer = portForClientsServer;
+            Task.Run(() => checkForUpdate());
+
+
+            TTransport transport = new TSocket("localhost", 9091);
+            TProtocol protocol = new TBinaryProtocol(transport);
+            transport.Open();
+
+            TransformerService.Client client = new TransformerService.Client(protocol);
+            List<MeciDTO> dtos = client.findAllMeci();
+            meciuriData = Retrive(dtos);
+            transport.Close();
+
+            MessageServer messageServer = new MessageServer(portForClientsServer); // start mini-server as observer on the client
+
             PopulateMeciTable();
-            this.numeCBox.Text = this.currentUser.nume;
             this.locuriCBox.Text = "0";
             this.listaMeciuri.FullRowSelect = true;
-            ctrl.updateEvent += userUpdate; // ADD OBSERVER (DELEGATE METHOD TO REFRESH GUI)
         }
 
 
-        protected virtual void OnUserEvent(UserEventArgs e) // CALL REFRESH GUI
+        private void checkForUpdate()
         {
-            if (updateEvent == null) return;
-            updateEvent(this, e);
-            Console.WriteLine("Update Event called");
+            while (true)
+            {
+                Thread.Sleep(250);
+                if (needsUpdate)
+                {
+                    needsUpdate = false;
+                    loadProbeTable();
+                }
+            }
         }
 
+        private void loadProbeTable(Boolean isUpdate = false)
+        {
+            Debug.WriteLine("loadProbeTable isUpdate: " + isUpdate);
+
+            if (listaMeciuri.InvokeRequired)
+            {
+                listaMeciuri.Invoke(new MethodInvoker(delegate
+                {
+                    loadProbeTableAux(isUpdate);
+                }));
+            }
+            else
+            {
+                loadProbeTableAux(isUpdate);
+            }
+        }
+
+
+        private void loadProbeTableAux(bool isUpdate)
+        {
+            if (isUpdate)
+            {
+                PopulateMeciTable();
+            }
+            else
+            {
+                TTransport transport = new TSocket("localhost", 9091);
+                TProtocol protocol = new TBinaryProtocol(transport);
+                transport.Open();
+
+                TransformerService.Client client = new TransformerService.Client(protocol);
+                var dtos = client.findAllMeci();
+                transport.Close();
+                meciuriData = Retrive(dtos);
+
+                PopulateMeciTable();
+            }
+        }
+
+
+        private List<Meci> Retrive(List<MeciDTO> dtos)
+        {
+            var meciuri = new List<Meci>();
+            foreach (var dto in dtos)
+            {
+                DateTime date = new DateTime(dto.Date);
+                // alternative ToObject with (int) dto.Tip
+                TipMeci tip = (TipMeci)Enum.Parse(typeof(TipMeci), dto.Tip.ToString());
+                Meci meci = new Meci(dto.Id, dto.Home, dto.Away, date, tip, dto.NumarBileteDisponibile);
+                meciuri.Add(meci);
+            }
+            return meciuri;
+        }
+        
 
         public void logout()
         {
-            Console.WriteLine("Ctrl logout");
-            ctrl.logout(currentUser);
-            currentUser = null;
-            loginWindow.Enabled = true;
+            Application.Exit();
+            this.Close();
         }
 
 
         private void FilterNotSoldOut()
         {
             listaMeciuri.Items.Clear();
-            List<Meci> all = ctrl.getAllMeciWithTickets().OrderBy(x => x.numarBileteDisponibile).Reverse().ToList();
+            TTransport transport = new TSocket("localhost", 9091);
+            TProtocol protocol = new TBinaryProtocol(transport);
+            transport.Open();
+
+            TransformerService.Client client = new TransformerService.Client(protocol);
+            var dtos = client.findAllMeciWithTickets().OrderBy(x => x.NumarBileteDisponibile).Reverse().ToList();
+            transport.Close();
+
+            var all = Retrive(dtos);
 
             foreach (Meci s in all)
             {
@@ -69,8 +147,19 @@ namespace ClientForm
         private void PopulateMeciTable()
         {
             listaMeciuri.Items.Clear();
-            IEnumerable<Meci> all = ctrl.getAllMeciuri();
+            
 
+
+            TTransport transport = new TSocket("localhost", 9091);
+            TProtocol protocol = new TBinaryProtocol(transport);
+            transport.Open();
+
+            TransformerService.Client client = new TransformerService.Client(protocol);
+            var dtos = client.findAllMeci();
+            transport.Close();
+
+            var all = Retrive(dtos);
+            
             foreach (Meci s in all)
             {
                 if (s.numarBileteDisponibile > 0)
@@ -133,8 +222,36 @@ namespace ClientForm
                     else
                     {
                         selectedMatch.numarBileteDisponibile = selectedMatch.numarBileteDisponibile - locuri;
-                        currentUser.nume = this.numeCBox.Text;
-                        this.ctrl.ticketsSold(selectedMatch, currentUser);
+
+                        TTransport transport = new TSocket("localhost", 9091);
+                        TProtocol protocol = new TBinaryProtocol(transport);
+                        transport.Open();
+
+                        TransformerService.Client client = new TransformerService.Client(protocol);
+                        TipMeciDTO tipdto = (TipMeciDTO)Enum.ToObject(typeof(TipMeciDTO), selectedMatch.tip);
+                        MeciDTO mdto = new MeciDTO
+                        {
+                            Id = selectedMatch.id,
+                            Home = selectedMatch.home,
+                            Away = selectedMatch.away,
+                            Date = selectedMatch.date.Ticks,
+                            Tip = tipdto,
+                            NumarBileteDisponibile = selectedMatch.numarBileteDisponibile
+                        };
+                        ClientDTO cdto = new ClientDTO
+                        {
+                            Id = myClient.id,
+                            Nume = myClient.nume,
+                            Password = myClient.password,
+                            Ip = myClient.host,
+                            Port = myClient.port
+                        };
+                        client.ticketsSold(mdto, cdto);
+                        transport.Close();
+
+                        loadProbeTable(true);
+                        PopulateMeciTable();
+
                         MessageBox.Show("Ati cumparat biletele!");
                     }
                 }
@@ -146,61 +263,6 @@ namespace ClientForm
             else
             {
                 MessageBox.Show("Nu ati introdus bine datele!");
-            }
-
-
-        }
-
-
-        //for updating the GUI
-
-        //1. define a method for updating the ListView
-        private void updateListView(ListView listView, IList<Meci> newData)
-        {
-            listView.Items.Clear();
-
-            foreach (Meci s in newData)
-            {
-                if (s.numarBileteDisponibile > 0)
-                {
-                    var row = new string[] { s.id, s.home, s.away, s.date.ToShortDateString(), s.numarBileteDisponibile.ToString() };
-                    var lvi = new ListViewItem(row);
-                    listView.Items.Add(lvi);
-                    lvi.Tag = s;
-                }
-                else
-                {
-                    var row = new string[] { s.id, s.home, s.away, s.date.ToShortDateString(), "SOLD OUT" };
-                    ListViewItem lvi = new ListViewItem(row);
-                    lvi.ForeColor = Color.Red;
-                    listView.Items.Add(lvi);
-                    lvi.Tag = s;
-                }
-            }
-        }
-
-        //2. define a delegate to be called back by the GUI Thread
-        public delegate void UpdateListViewCallback(ListView list, IList<Meci> data);
-
-        //3. in the other thread call like this:
-        /*
-         * list.Invoke(new UpdateListBoxCallback(this.updateListBox), new Object[]{list, data});
-         * 
-         * */
-
-        public void userUpdate(object sender, UserEventArgs e)
-        {
-
-            if (e.UserEventType == UpdateType.TICKETS_SOLD)
-            {
-                String meciInfo = e.Data.ToString();
-
-                Meci meciUpdated = (Meci)e.Data;
-                meciuriData.Remove(meciUpdated);
-                meciuriData.Add(meciUpdated);
-
-                Console.WriteLine("[MainWindow] Updated Meci " + meciInfo);
-                listaMeciuri.BeginInvoke(new UpdateListViewCallback(this.updateListView), new Object[] { listaMeciuri, meciuriData });
             }
         }
     }

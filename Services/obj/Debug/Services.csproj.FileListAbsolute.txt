@@ -1,9 +1,0 @@
-C:\Users\George\source\repos\BasketCS\Services\bin\Debug\Services.dll
-C:\Users\George\source\repos\BasketCS\Services\bin\Debug\Services.pdb
-C:\Users\George\source\repos\BasketCS\Services\bin\Debug\Model.dll
-C:\Users\George\source\repos\BasketCS\Services\bin\Debug\Model.pdb
-C:\Users\George\source\repos\BasketCS\Services\obj\Debug\Services.csprojAssemblyReference.cache
-C:\Users\George\source\repos\BasketCS\Services\obj\Debug\Services.csproj.CoreCompileInputs.cache
-C:\Users\George\source\repos\BasketCS\Services\obj\Debug\Services.csproj.CopyComplete
-C:\Users\George\source\repos\BasketCS\Services\obj\Debug\Services.dll
-C:\Users\George\source\repos\BasketCS\Services\obj\Debug\Services.pdb

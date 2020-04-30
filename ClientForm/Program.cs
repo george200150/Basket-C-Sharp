@@ -1,6 +1,4 @@
-﻿using Services;
-using System;
-using Networking.network;
+﻿using System;
 using System.Windows.Forms;
 
 
@@ -17,8 +15,7 @@ namespace ClientForm
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
           
-            IServices server = new ServicesRpcProxy("127.0.0.1", 55555);
-            LoginWindow win = new LoginWindow(server);
+            LoginWindow win = new LoginWindow();
             Application.Run(win);
         }
     }

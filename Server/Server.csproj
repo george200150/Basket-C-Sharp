@@ -61,14 +61,6 @@
       <Project>{bfecc799-e73f-4fd4-b37d-ac228e95d0a3}</Project>
       <Name>Model</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Networking\Networking.csproj">
-      <Project>{e9fc4c51-bda3-4b32-ab56-d58f90cb5a66}</Project>
-      <Name>Networking</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Persistence\Persistence.csproj">
-      <Project>{d06494fd-7728-4a3d-bf56-276c5c23f12c}</Project>
-      <Name>Persistence</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Services\Services.csproj">
       <Project>{e932c56f-a81c-462e-8082-92f9123886f6}</Project>
       <Name>Services</Name>
