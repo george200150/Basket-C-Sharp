@@ -164,7 +164,6 @@
     <Compile Include="MessageHandler.cs" />
     <Compile Include="MessageServer.cs" />
     <Compile Include="MessageService.cs" />
-    <Compile Include="TransformerService.cs" />
     <Compile Include="LoginWindow.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -179,6 +178,7 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TransformerService.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

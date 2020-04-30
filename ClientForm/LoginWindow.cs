@@ -10,7 +10,7 @@ namespace ClientForm
 {
     internal partial class LoginWindow : Form
     {
-        public static int portForClientsServer;
+        public static int observerServerPort;
 
         public LoginWindow()
         {
@@ -20,27 +20,27 @@ namespace ClientForm
         private int getAvailablePort(int startPort)
         {
             int port = startPort;
-            bool isAvailable = false;
+            bool isNotBlocked = false;
 
-            while (!isAvailable)
+            while (!isNotBlocked)
             {
-                isAvailable = true;
+                isNotBlocked = true;
 
                 using (TcpClient tcpClient = new TcpClient())
                 {
                     try
                     {
                         tcpClient.Connect("127.0.0.1", port);
-                        Console.WriteLine("Port open" + port);
-                        isAvailable = false;
+                        Console.WriteLine("OPENED PORT: {0}", port);
+                        isNotBlocked = false;
                     }
                     catch (Exception)
                     {
-                        Console.WriteLine("Port closed" + port);
+                        Console.WriteLine("closed port: {0}", port);
                     }
                 }
 
-                if (isAvailable)
+                if (isNotBlocked)
                 {
                     return port;
                 }
@@ -64,9 +64,9 @@ namespace ClientForm
                 transport.Open();
 
                 TransformerService.Client client = new TransformerService.Client(protocol);
-                portForClientsServer = getAvailablePort(9092);
-                Debug.WriteLine("port for client's server: " + portForClientsServer);
-                String response = client.login(username, password, "localhost", portForClientsServer);
+                observerServerPort = getAvailablePort(9092);
+                Debug.WriteLine("port for client's server: " + observerServerPort);
+                String response = client.login(username, password, "localhost", observerServerPort);
                 Console.WriteLine("CSharp client received: {0}", response);
                 transport.Close();
 
@@ -76,9 +76,9 @@ namespace ClientForm
                 }
                 Random random = new Random();
                 string id = random.NextDouble().ToString();
-                Client myClient = new Client(id, username, password, "localhost", portForClientsServer);
-                MainPage form2 = new MainPage(portForClientsServer, myClient);
-                form2.Text = "Window for " + username;
+                Client myClient = new Client(id, username, password, "localhost", observerServerPort);
+                MainPage form2 = new MainPage(observerServerPort, myClient);
+                form2.Text = "Form for " + username;
                 form2.Show();
                 this.Hide();
             }

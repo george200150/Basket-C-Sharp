@@ -16,15 +16,15 @@ namespace ClientForm
     {
         public static Boolean needsUpdate { get; set; }
         private List<Meci> meciuriData;
-        private int portForClientsServer;
+        private int observerServerPort;
         private Client myClient;
 
 
-        public MainPage(int portForClientsServer, Client myClient)
+        public MainPage(int observerServerPort, Client myClient)
         {
             this.myClient = myClient;
             InitializeComponent();
-            this.portForClientsServer = portForClientsServer;
+            this.observerServerPort = observerServerPort;
             Task.Run(() => checkForUpdate());
 
 
@@ -34,10 +34,10 @@ namespace ClientForm
 
             TransformerService.Client client = new TransformerService.Client(protocol);
             List<MeciDTO> dtos = client.findAllMeci();
-            meciuriData = Retrive(dtos);
+            meciuriData = retreive(dtos);
             transport.Close();
 
-            MessageServer messageServer = new MessageServer(portForClientsServer); // start mini-server as observer on the client
+            MessageServer messageServer = new MessageServer(observerServerPort); // start mini-server as observer on the client
 
             PopulateMeciTable();
             this.locuriCBox.Text = "0";
@@ -53,12 +53,12 @@ namespace ClientForm
                 if (needsUpdate)
                 {
                     needsUpdate = false;
-                    loadProbeTable();
+                    checkForUpdates();
                 }
             }
         }
 
-        private void loadProbeTable(Boolean isUpdate = false)
+        private void checkForUpdates(Boolean isUpdate = false)
         {
             Debug.WriteLine("loadProbeTable isUpdate: " + isUpdate);
 
@@ -66,17 +66,17 @@ namespace ClientForm
             {
                 listaMeciuri.Invoke(new MethodInvoker(delegate
                 {
-                    loadProbeTableAux(isUpdate);
+                    checkForUpdatesImpl(isUpdate);
                 }));
             }
             else
             {
-                loadProbeTableAux(isUpdate);
+                checkForUpdatesImpl(isUpdate);
             }
         }
 
 
-        private void loadProbeTableAux(bool isUpdate)
+        private void checkForUpdatesImpl(bool isUpdate)
         {
             if (isUpdate)
             {
@@ -91,14 +91,14 @@ namespace ClientForm
                 TransformerService.Client client = new TransformerService.Client(protocol);
                 var dtos = client.findAllMeci();
                 transport.Close();
-                meciuriData = Retrive(dtos);
+                meciuriData = retreive(dtos);
 
                 PopulateMeciTable();
             }
         }
 
 
-        private List<Meci> Retrive(List<MeciDTO> dtos)
+        private List<Meci> retreive(List<MeciDTO> dtos)
         {
             var meciuri = new List<Meci>();
             foreach (var dto in dtos)
@@ -131,7 +131,7 @@ namespace ClientForm
             var dtos = client.findAllMeciWithTickets().OrderBy(x => x.NumarBileteDisponibile).Reverse().ToList();
             transport.Close();
 
-            var all = Retrive(dtos);
+            var all = retreive(dtos);
 
             foreach (Meci s in all)
             {
@@ -158,7 +158,7 @@ namespace ClientForm
             var dtos = client.findAllMeci();
             transport.Close();
 
-            var all = Retrive(dtos);
+            var all = retreive(dtos);
             
             foreach (Meci s in all)
             {
@@ -249,7 +249,7 @@ namespace ClientForm
                         client.ticketsSold(mdto, cdto);
                         transport.Close();
 
-                        loadProbeTable(true);
+                        checkForUpdates(true);
                         PopulateMeciTable();
 
                         MessageBox.Show("Ati cumparat biletele!");

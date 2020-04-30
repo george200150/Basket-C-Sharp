@@ -164,13 +164,7 @@
     <Compile Include="domain\MeciDTO.cs" />
     <Compile Include="domain\TipMeci.cs" />
     <Compile Include="domain\TipMeciDTO.cs" />
-    <Compile Include="validators\AbstractValidator.cs" />
-    <Compile Include="validators\BiletValidator.cs" />
-    <Compile Include="validators\ClientValidator.cs" />
-    <Compile Include="validators\IValidator.cs" />
-    <Compile Include="validators\MeciValidator.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="validators\ValidationException.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
