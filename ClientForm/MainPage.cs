@@ -241,7 +241,7 @@ namespace ClientForm
                         ClientDTO cdto = new ClientDTO
                         {
                             Id = myClient.id,
-                            Nume = myClient.nume,
+                            Nume = nume,
                             Password = myClient.password,
                             Ip = myClient.host,
                             Port = myClient.port

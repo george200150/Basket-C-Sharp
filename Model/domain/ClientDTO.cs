@@ -21,11 +21,25 @@ using Thrift.Transport;
 #endif
 public partial class ClientDTO : TBase
 {
+  private string _sessionId;
   private string _id;
   private string _password;
   private string _nume;
   private string _ip;
   private int _port;
+
+  public string SessionId
+  {
+    get
+    {
+      return _sessionId;
+    }
+    set
+    {
+      __isset.sessionId = true;
+      this._sessionId = value;
+    }
+  }
 
   public string Id
   {
@@ -98,6 +112,7 @@ public partial class ClientDTO : TBase
   [Serializable]
   #endif
   public struct Isset {
+    public bool sessionId;
     public bool id;
     public bool password;
     public bool nume;
@@ -125,33 +140,40 @@ public partial class ClientDTO : TBase
         {
           case 1:
             if (field.Type == TType.String) {
-              Id = iprot.ReadString();
+              SessionId = iprot.ReadString();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
             break;
           case 2:
             if (field.Type == TType.String) {
-              Password = iprot.ReadString();
+              Id = iprot.ReadString();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
             break;
           case 3:
             if (field.Type == TType.String) {
-              Nume = iprot.ReadString();
+              Password = iprot.ReadString();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
             break;
           case 4:
             if (field.Type == TType.String) {
-              Ip = iprot.ReadString();
+              Nume = iprot.ReadString();
             } else { 
               TProtocolUtil.Skip(iprot, field.Type);
             }
             break;
           case 5:
+            if (field.Type == TType.String) {
+              Ip = iprot.ReadString();
+            } else { 
+              TProtocolUtil.Skip(iprot, field.Type);
+            }
+            break;
+          case 6:
             if (field.Type == TType.I32) {
               Port = iprot.ReadI32();
             } else { 
@@ -179,10 +201,18 @@ public partial class ClientDTO : TBase
       TStruct struc = new TStruct("ClientDTO");
       oprot.WriteStructBegin(struc);
       TField field = new TField();
+      if (SessionId != null && __isset.sessionId) {
+        field.Name = "sessionId";
+        field.Type = TType.String;
+        field.ID = 1;
+        oprot.WriteFieldBegin(field);
+        oprot.WriteString(SessionId);
+        oprot.WriteFieldEnd();
+      }
       if (Id != null && __isset.id) {
         field.Name = "id";
         field.Type = TType.String;
-        field.ID = 1;
+        field.ID = 2;
         oprot.WriteFieldBegin(field);
         oprot.WriteString(Id);
         oprot.WriteFieldEnd();
@@ -190,7 +220,7 @@ public partial class ClientDTO : TBase
       if (Password != null && __isset.password) {
         field.Name = "password";
         field.Type = TType.String;
-        field.ID = 2;
+        field.ID = 3;
         oprot.WriteFieldBegin(field);
         oprot.WriteString(Password);
         oprot.WriteFieldEnd();
@@ -198,7 +228,7 @@ public partial class ClientDTO : TBase
       if (Nume != null && __isset.nume) {
         field.Name = "nume";
         field.Type = TType.String;
-        field.ID = 3;
+        field.ID = 4;
         oprot.WriteFieldBegin(field);
         oprot.WriteString(Nume);
         oprot.WriteFieldEnd();
@@ -206,7 +236,7 @@ public partial class ClientDTO : TBase
       if (Ip != null && __isset.ip) {
         field.Name = "ip";
         field.Type = TType.String;
-        field.ID = 4;
+        field.ID = 5;
         oprot.WriteFieldBegin(field);
         oprot.WriteString(Ip);
         oprot.WriteFieldEnd();
@@ -214,7 +244,7 @@ public partial class ClientDTO : TBase
       if (__isset.port) {
         field.Name = "port";
         field.Type = TType.I32;
-        field.ID = 5;
+        field.ID = 6;
         oprot.WriteFieldBegin(field);
         oprot.WriteI32(Port);
         oprot.WriteFieldEnd();
@@ -231,6 +261,12 @@ public partial class ClientDTO : TBase
   public override string ToString() {
     StringBuilder __sb = new StringBuilder("ClientDTO(");
     bool __first = true;
+    if (SessionId != null && __isset.sessionId) {
+      if(!__first) { __sb.Append(", "); }
+      __first = false;
+      __sb.Append("SessionId: ");
+      __sb.Append(SessionId);
+    }
     if (Id != null && __isset.id) {
       if(!__first) { __sb.Append(", "); }
       __first = false;

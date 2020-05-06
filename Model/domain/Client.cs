@@ -4,6 +4,7 @@ namespace Model.domain
 {
     public class Client : Entity<string>
     {
+        public string sessionId { get; set; }
         public string password { get; set; }
         public string nume { get; set; }
         public string host { get; set; }
@@ -15,7 +16,7 @@ namespace Model.domain
             this.password = password;
         }
 
-        public Client(string id, string password, string nume, string host, int port)
+        public Client(string id, string sessionId, string password, string nume, string host, int port)
         {
             base.id = id;
             this.password = password;

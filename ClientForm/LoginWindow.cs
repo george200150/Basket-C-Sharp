@@ -70,13 +70,18 @@ namespace ClientForm
                 Console.WriteLine("CSharp client received: {0}", response);
                 transport.Close();
 
-                if (!response.Equals("success"))
+                string id = "null";
+                if (response.Equals("error"))
                 {
                     throw new Exception("authentification failed");
                 }
+                else
+                {
+                    id = response;
+                }
                 Random random = new Random();
-                string id = random.NextDouble().ToString();
-                Client myClient = new Client(id, username, password, "localhost", observerServerPort);
+                string sessionId = random.NextDouble().ToString();
+                Client myClient = new Client(id, sessionId, username, password, "localhost", observerServerPort);
                 MainPage form2 = new MainPage(observerServerPort, myClient);
                 form2.Text = "Form for " + username;
                 form2.Show();
